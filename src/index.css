@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #06b6d4; /* Cyan 500 */
+  --color-accent-hover: #0891b2; /* Cyan 600 */
+  --color-bg-dark: #0f172a; /* Slate 900 */
+  --color-bg-dark-secondary: #1e293b; /* Slate 800 */
+  --color-text-dark: #f8fafc; /* Slate 50 */
+  --color-text-dark-muted: #94a3b8; /* Slate 400 */
+}
+
+@layer base {
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #0f172a;
+    --text-muted: #64748b;
+    --accent: #0ea5e9;
+  }
+
+  .dark {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+  }
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  cursor: none; /* Hide default cursor for custom cursor */
+}
+
+/* Fallback for touch devices to show default cursor */
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
