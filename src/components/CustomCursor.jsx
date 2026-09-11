@@ -4,8 +4,15 @@ import { motion } from 'framer-motion';
 export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    // Check for touch devices on mount
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      setIsTouch(true);
+      return;
+    }
+
     const updateMousePosition = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -35,9 +42,7 @@ export default function CustomCursor() {
   }, []);
 
   // Don't render cursor on mobile/touch devices
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
-    return null;
-  }
+  if (isTouch) return null;
 
   const variants = {
     default: {
@@ -60,7 +65,8 @@ export default function CustomCursor() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 flex items-center justify-center transition-colors"
+      className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none flex items-center justify-center"
+      style={{ zIndex: 9999 }}
       variants={variants}
       animate={isHovered ? 'hover' : 'default'}
       transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 0.5 }}

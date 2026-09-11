@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Link as LinkIcon, Mail, MapPin } from 'lucide-react';
+import { Send, Link as LinkIcon, Mail, MapPin, X } from 'lucide-react';
 
 export default function Contact() {
   const [formState, setFormState] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
   const buttonRef = useRef(null);
 
   const handleMouseMove = (e) => {
@@ -21,15 +22,46 @@ export default function Contact() {
     buttonRef.current.style.transform = `translate(0px, 0px)`;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate form submission
-    setTimeout(() => setIsSubmitting(false), 2000);
+    setSubmitStatus(null);
+    
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          // Replace this with your Web3Forms Access Key
+          access_key: "YOUR_ACCESS_KEY_HERE", 
+          name: formState.name,
+          email: formState.email,
+          message: formState.message,
+          subject: `Portfolio Contact from ${formState.name}`,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormState({ name: '', email: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+      // Clear status message after 5 seconds
+      setTimeout(() => setSubmitStatus(null), 5000);
+    }
   };
 
   return (
-    <section id="contact" className="py-32 bg-slate-50 dark:bg-slate-900/50">
+    <section id="contact" className="py-20 md:py-24 bg-slate-50 dark:bg-slate-900/50">
       <div className="container mx-auto px-6 md:px-12 max-w-5xl">
         <div className="flex flex-col md:flex-row gap-16">
           <div className="w-full md:w-1/2">
@@ -119,7 +151,7 @@ export default function Contact() {
                 </label>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-6">
                 <div 
                   className="inline-block"
                   onMouseMove={handleMouseMove}
@@ -129,12 +161,39 @@ export default function Contact() {
                   <button 
                     ref={buttonRef}
                     type="submit"
-                    className="flex items-center gap-2 bg-accent text-white px-8 py-4 rounded-xl font-bold hover:bg-accent/90 transition-colors shadow-lg shadow-accent/25 hoverable cursor-none"
+                    disabled={isSubmitting}
+                    className={`flex items-center gap-2 px-8 py-4 rounded-xl font-bold transition-all shadow-lg hoverable cursor-none ${
+                      isSubmitting 
+                        ? 'bg-slate-400 dark:bg-slate-700 text-white shadow-none cursor-wait' 
+                        : 'bg-accent text-white hover:bg-accent/90 shadow-accent/25'
+                    }`}
                   >
                     {isSubmitting ? 'Sending...' : 'Send Message'}
                     <Send size={18} className={isSubmitting ? "animate-pulse" : ""} />
                   </button>
                 </div>
+                
+                {submitStatus === 'success' && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -10 }} 
+                    animate={{ opacity: 1, x: 0 }}
+                    className="text-emerald-500 dark:text-emerald-400 font-medium text-sm flex items-center gap-2"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
+                    Message sent successfully!
+                  </motion.div>
+                )}
+                
+                {submitStatus === 'error' && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -10 }} 
+                    animate={{ opacity: 1, x: 0 }}
+                    className="text-rose-500 dark:text-rose-400 font-medium text-sm flex items-center gap-2"
+                  >
+                    <X size={16} />
+                    Failed to send. Please try again.
+                  </motion.div>
+                )}
               </div>
             </form>
           </div>

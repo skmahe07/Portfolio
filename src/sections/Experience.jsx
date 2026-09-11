@@ -49,9 +49,10 @@ export default function Experience() {
     {
       title: "Associate Software Engineer",
       company: "Prodapt",
+      client: "Verizon",
       date: "2024 - Present",
       points: [
-        "Engineered and deployed scalable backend services and feature enhancements for Verizon's application using Java and Spring Boot, driving core network provisioning capabilities.",
+        "Engineered and deployed scalable backend services and feature enhancements for Verizon's Customer Wave Services application using Java and Spring Boot, driving core network provisioning capabilities.",
         "Architected business logic to automate circuit creation, bandwidth management, and network traffic capture.",
         "Designed and optimized complex SQL queries to manage massive datasets, improving data retrieval efficiency.",
         "Managed the end-to-end feature lifecycle using Git and Agile methodologies, resolving production bugs for zero-downtime operations."
@@ -96,7 +97,10 @@ export default function Experience() {
                   <div className="p-6 md:p-8 bg-slate-50 dark:bg-slate-800/50 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hoverable transition-colors hover:border-accent/50">
                     <span className="text-sm font-bold text-accent mb-2 block">{exp.date}</span>
                     <h3 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-1">{exp.title}</h3>
-                    <h4 className="text-lg font-medium text-slate-600 dark:text-slate-400 mb-4">{exp.company}</h4>
+                    <h4 className="text-lg font-medium text-slate-600 dark:text-slate-400 mb-1">{exp.company}</h4>
+                    {exp.client && (
+                      <span className="inline-block text-sm font-semibold text-white bg-accent/80 px-3 py-0.5 rounded-full mb-4">Client: {exp.client}</span>
+                    )}
                     <ul className="space-y-3">
                       {exp.points.map((point, i) => (
                         <li key={i} className="flex items-start text-slate-600 dark:text-slate-400 text-sm md:text-base">

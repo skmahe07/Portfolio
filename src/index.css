@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* 
+  Tell Tailwind v4 to use class-based dark mode 
+  so the dark: variants respond to .dark on <html>
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-accent: #06b6d4; /* Cyan 500 */
   --color-accent-hover: #0891b2; /* Cyan 600 */
@@ -9,22 +15,22 @@
   --color-text-dark-muted: #94a3b8; /* Slate 400 */
 }
 
-@layer base {
-  :root {
-    --bg-color: #ffffff;
-    --text-color: #0f172a;
-    --text-muted: #64748b;
-    --accent: #0ea5e9;
-  }
-
-  .dark {
-    --bg-color: #0f172a;
-    --text-color: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
-  }
+/* CSS Variables for body-level transitions */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #0f172a;
+  --text-muted: #64748b;
+  --accent: #0ea5e9;
 }
 
+.dark {
+  --bg-color: #0f172a;
+  --text-color: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #38bdf8;
+}
+
+/* Lenis smooth scrolling overrides */
 html.lenis, html.lenis body {
   height: auto;
 }
@@ -45,10 +51,11 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
+/* Global body styles */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
   overflow-x: hidden;
   cursor: none; /* Hide default cursor for custom cursor */
 }
@@ -58,6 +65,18 @@ body {
   body {
     cursor: auto;
   }
+}
+
+/* Smooth theme transition on all background/text/border elements */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+/* Don't apply transition to animations and transforms */
+[class*="motion"], canvas, video, img {
+  transition-property: none !important;
 }
 
 ::selection {
